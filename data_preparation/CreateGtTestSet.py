@@ -13,6 +13,7 @@ if not os.path.isdir(gt_path_csv):
     os.mkdir(gt_path_csv)
 
 num_images = 182 if Dataset == 'A' else 316
+# mat['image_info'][0,0][0,0][0]
 
 
 for i in range(1, num_images + 1):
@@ -22,11 +23,6 @@ for i in range(1, num_images + 1):
     
     gt_name = gt_path + "GT_IMG_" + str(i) + '.mat'
     gt_Info = sio.loadmat(gt_name)
-    
-    if i == 1:
-        print(type(gt_Info['image_info']))
-        data = gt_Info.get('image_info')
-        print(data)
 
     input_image_name = path + "IMG_" + str(i) + '.jpg'
     Image = cv2.imread(input_image_name)
@@ -35,7 +31,9 @@ for i in range(1, num_images + 1):
     if C == 3:
         Image = cv2.cvtColor(Image, cv2.COLOR_RGB2GRAY)
 
-    annPoints = 0
+    annPoints = gt_Info['image_info'][0, 0][0, 0][0]
+    print(type(annPoints))
+    print(annPoints.shape)
     # Image_Density = get_density_map_gaussian(Image, annPoints)
 
 
