@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 import os 
 import scipy.io as sio
+from get_density_map_gayssian import Get_Density_Map_Gaussian
 
 Dataset = 'A'
 Dataset_Name = 'shanghaitech_part_' + Dataset
@@ -35,5 +36,5 @@ for i in range(1, num_images + 1):
     print(type(annPoints))
     print(annPoints.shape)
     # Image_Density = get_density_map_gaussian(Image, annPoints)
-
+    ImageDensity = Get_Density_Map_Gaussian(Image, annPoints)
 
