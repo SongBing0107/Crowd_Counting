@@ -1,10 +1,28 @@
 import scipy.io as sio
+import cv2
+import os 
 
-dataname = 'GT_IMG_1.mat'
+os.chdir('./Unit_Test')
+
+
+dataname = 'GT_IMG_5.mat'
 data = sio.loadmat(dataname)
+datainfo = data['image_info'][0, 0][0, 0][0]
+
+print(datainfo.shape)
+
+Imagename = 'IMG_5.jpg'
+Image = cv2.imread(Imagename)
+
+cv2.imshow('origin image', Image)
+cv2.imwrite('origin image.jpg', Image)
 
 
-# 好像是要求data裡面data['image_info']的資料 不過那個資料結構有點看不懂== 
-# 不太確定那個31行如果在python裡面要怎改寫 麻煩阿盧看一下ㄌ
-print(data['image_info'])
-print(type(data['image_info']))
+for x, y in datainfo:
+    cv2.circle(Image, (int(x), int(y)), 10, (0, 0, 255), 0)
+
+cv2.imshow('img', Image)
+cv2.imwrite('labeled image.jpg', Image)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
