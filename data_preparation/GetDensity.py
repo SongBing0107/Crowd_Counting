@@ -14,7 +14,7 @@ def Get_Density_Map_Gaussian(Image, points):
         Image_density[y1, x1] = 255
         return Image_density
 
-    for i in range(1, len(points)):
+    for i in range(1, len(points) + 1):
         fsz = 15
         sigma = 4.0
         H = matlab_style_gauss2D((fsz, fsz), sigma=sigma)
