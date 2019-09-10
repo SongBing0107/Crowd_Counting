@@ -18,6 +18,10 @@ def Get_Density_Map_Gaussian(Image, points):
         fsz = 15
         sigma = 4.0
         H = matlab_style_gauss2D((fsz, fsz), sigma=sigma)
+
+        print('H.shape = {}'.format(H.shape))
+        print('H = {}'.format(H))   
+
         x = min(W, max(1, abs(int(math.floor(points[i, 0])))))
         y = min(H, max(1, abs(int(math.floor(points[i, 1])))))
         
