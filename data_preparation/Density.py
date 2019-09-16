@@ -66,12 +66,14 @@ if __name__ == '__main__':
     validation_num = 15
 
     img_names = os.listdir(train_img)
-    img_names.sort()
+    print(img_names)
+    # img_names.sort()
     # print(img_names)
     num = len(img_names)
     num_list = np.arange(1, num + 1)
     # random.shuffle(num_list)
     global_step = 1
+    '''
     for i in num_list:
         full_img = train_img + '/IMG_' + str(i) + '.jpg'
         full_gt = train_gt + '/GT_IMG_' + str(i) + '.mat'
@@ -144,3 +146,4 @@ if __name__ == '__main__':
         fig2 = plt.figure('fig2')
         # plt.imshow(den_map)
         # plt.show()
+    '''
