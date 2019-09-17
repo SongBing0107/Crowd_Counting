@@ -73,7 +73,7 @@ if __name__ == '__main__':
     num_list = np.arange(1, num + 1)
     # random.shuffle(num_list)
     global_step = 1
-    '''
+
     for i in num_list:
         full_img = train_img + '/IMG_' + str(i) + '.jpg'
         full_gt = train_gt + '/GT_IMG_' + str(i) + '.mat'
@@ -146,4 +146,3 @@ if __name__ == '__main__':
         fig2 = plt.figure('fig2')
         # plt.imshow(den_map)
         # plt.show()
-    '''

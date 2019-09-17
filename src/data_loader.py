@@ -10,8 +10,8 @@ class ImageDataLoader():
         #          This avoids frequent file reads. Use this only for small datasets.
         self.data_path = data_path
         self.gt_path = gt_path
-        self.gt_downsample = gt_downsample
-        self.pre_load = pre_load
+        self.gt_downsample = gt_downsample # bool
+        self.pre_load = pre_load           # bool
         self.data_files = [filename for filename in os.listdir(data_path) \
                            if os.path.isfile(os.path.join(data_path,filename))]
         self.data_files.sort()
@@ -22,17 +22,18 @@ class ImageDataLoader():
         self.blob_list = {}        
         self.id_list = range(0,self.num_samples)
         if self.pre_load:
-            print 'Pre-loading the data. This may take a while...'
+            print('Pre-loading the data. This may take a while...')
             idx = 0
             for fname in self.data_files:
-                
+                print('fname = {}'.format(fname))
                 img = cv2.imread(os.path.join(self.data_path,fname),0)
                 img = img.astype(np.float32, copy=False)
                 ht = img.shape[0]
                 wd = img.shape[1]
                 ht_1 = (ht/4)*4
                 wd_1 = (wd/4)*4
-                img = cv2.resize(img,(wd_1,ht_1))
+
+                img = cv2.resize(img,(int(wd_1), int(ht_1)))
                 img = img.reshape((1,1,img.shape[0],img.shape[1]))
                 den = pd.read_csv(os.path.join(self.gt_path,os.path.splitext(fname)[0] + '.csv'), sep=',',header=None).as_matrix()                        
                 den  = den.astype(np.float32, copy=False)
@@ -53,9 +54,9 @@ class ImageDataLoader():
                 self.blob_list[idx] = blob
                 idx = idx+1
                 if idx % 100 == 0:                    
-                    print 'Loaded ', idx, '/', self.num_samples, 'files'
+                    print('Loaded ', idx, '/', self.num_samples, 'files')
                
-            print 'Completed Loading ', idx, 'files'
+            print('Completed Loading ', idx, 'files')
         
         
     def __iter__(self):

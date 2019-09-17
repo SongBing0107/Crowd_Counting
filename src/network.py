@@ -43,8 +43,8 @@ def save_net(fname, net):
 def load_net(fname, net):
     import h5py
     h5f = h5py.File(fname, mode='r')
-    for k, v in net.state_dict().items():        
-        param = torch.from_numpy(np.asarray(h5f[k]))         
+    for k, v in net.state_dict().items():
+        param = torch.from_numpy(np.asarray(h5f[k]))
         v.copy_(param)
 
 
@@ -69,7 +69,7 @@ def weights_normal_init(model, dev=0.01):
             weights_normal_init(m, dev)
     else:
         for m in model.modules():
-            if isinstance(m, nn.Conv2d):                
+            if isinstance(m, nn.Conv2d):
                 #print torch.sum(m.weight)
                 m.weight.data.normal_(0.0, dev)
                 if m.bias is not None:

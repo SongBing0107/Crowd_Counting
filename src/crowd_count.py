@@ -1,12 +1,11 @@
 import torch.nn as nn
-import network
-from models import MCNN
-
+from . import network
+from . import models
 
 class CrowdCounter(nn.Module):
     def __init__(self):
         super(CrowdCounter, self).__init__()        
-        self.DME = MCNN()        
+        self.DME = models.MCNN()
         self.loss_fn = nn.MSELoss()
         
     @property
