@@ -131,7 +131,8 @@ if __name__ == '__main__':
                 if final_image.shape[2] < 3:
                     final_image = np.tile(final_image, [1, 1, 3])
                 image_final_name = out_path + mode + '_img/' 'IMG_' + str(i) + '_' + str(count) + '.jpg'
-                gt_final_name = out_path + mode + '_gt/' + 'GT_IMG_' + str(i) + '_' + str(count)
+                # gt_final_name = out_path + mode + '_gt/' + 'IMG_' + str(i) + '_' + str(count) + '.csv'
+                gt_final_name = out_path + mode + '_gt/' + 'IMG_' + str(i) + '_' + str(count) + '.npy'
                 print('i = {}, count = {}'.format(i, count))
                 print('gt_final name = {}'.format(gt_final_name))
                 print('image final name = {}'.format(image_final_name))

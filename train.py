@@ -17,6 +17,7 @@ output_dir = './result/'
 if not os.path.isdir(output_dir):
     os.mkdir(output_dir)
 
+
 train_path = r'data/original/shanghaitech/true_crowd_counting/train_img'
 train_gt_path = r'data/original/shanghaitech/true_crowd_counting/train_gt'
 val_path = r'data/original/shanghaitech/true_crowd_counting/val_img'
@@ -29,7 +30,7 @@ lr = 0.00001
 momentum = 0.9
 disp_interval = 500
 log_interval = 250
-
+'''
 try:
     from termcolor import cprint
 except ImportError:
@@ -53,7 +54,7 @@ use_tensorboard = False
 save_exp_name = method + '_' + dataset_name + '_' + 'v1'
 remove_all_log = False  # remove all historical experiments in TensorBoard
 exp_name = None  # the previous experiment name in TensorBoard
-
+'''
 # ------------
 rand_seed = 64678
 if rand_seed is not None:
@@ -72,7 +73,7 @@ optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, net.parameters())
 
 if not os.path.exists(output_dir):
     os.mkdir(output_dir)
-
+'''
 # tensorboad
 use_tensorboard = use_tensorboard and CrayonClient is not None
 if use_tensorboard:
@@ -84,7 +85,7 @@ if use_tensorboard:
         exp = cc.create_experiment(exp_name)
     else:
         exp = cc.open_experiment(exp_name)
-
+'''
 # training
 train_loss = 0
 step_cnt = 0
@@ -94,7 +95,7 @@ t.tic()
 
 data_loader = ImageDataLoader(train_path, train_gt_path, shuffle=True, gt_downsample=True, pre_load=True)
 data_loader_val = ImageDataLoader(val_path, val_gt_path, shuffle=False, gt_downsample=True, pre_load=True)
-best_mae = sys.maxint
+best_mae = sys.maxsize
 
 for epoch in range(start_step, end_step + 1):
     step = -1
@@ -105,7 +106,8 @@ for epoch in range(start_step, end_step + 1):
         gt_data = blob['gt_density']
         density_map = net(im_data, gt_data)
         loss = net.loss
-        train_loss += loss.data[0]
+        # train_loss += loss.data[0]
+        train_loss += loss.item()
         step_cnt += 1
         optimizer.zero_grad()
         loss.backward()
@@ -121,7 +123,8 @@ for epoch in range(start_step, end_step + 1):
             log_text = 'epoch: %4d, step %4d, Time: %.4fs, gt_cnt: %4.1f, et_cnt: %4.1f' % (epoch,
                                                                                             step, 1. / fps, gt_count,
                                                                                             et_count)
-            log_print(log_text, color='green', attrs=['bold'])
+            print('epoch: {}, step {}, Time: {}, gt_cnt: {} et_cnt: {}\n'.format(epoch, step, 1.0/fps, gt_count, et_count))
+            # log_print(log_text, color='green', attrs=['bold'])
             re_cnt = True
 
         if re_cnt:
@@ -137,6 +140,7 @@ for epoch in range(start_step, end_step + 1):
             best_mae = mae
             best_mse = mse
             best_model = '{}_{}_{}.h5'.format(method, dataset_name, epoch)
+        '''
         log_text = 'EPOCH: %d, MAE: %.1f, MSE: %0.1f' % (epoch, mae, mse)
         log_print(log_text, color='green', attrs=['bold'])
         log_text = 'BEST MAE: %0.1f, BEST MSE: %0.1f, BEST MODEL: %s' % (best_mae, best_mse, best_model)
@@ -145,3 +149,4 @@ for epoch in range(start_step, end_step + 1):
             exp.add_scalar_value('MAE', mae, step=epoch)
             exp.add_scalar_value('MSE', mse, step=epoch)
             exp.add_scalar_value('train_loss', train_loss / data_loader.get_num_samples(), step=epoch)
+        '''
