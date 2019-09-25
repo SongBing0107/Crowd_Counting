@@ -52,14 +52,18 @@ def create_density(gts, d_map_h, d_map_w):
     return density
 
 if __name__ == '__main__':
+    print('os.getcwd() = {}'.format(os.getcwd()))
     test = './'
-    train_img = '../data/original/shanghaitech/part_A/train_data/images'
+    # train_img = '../data/original/shanghaitech/part_A/train_data/images'
+    train_img = 'data/original/shanghaitech/part_A/test_data/images'
     # print(os.path.isdir(train_img))
-    train_gt = '../data/original/shanghaitech/part_A/train_data/ground-truth'
+    # train_gt = '../data/original/shanghaitech/part_A/train_data/ground-truth'
+    train_gt = 'data/original/shanghaitech/part_A/test_data/ground-truth'
     # print(os.path.isdir(train_gt))
-    out_path = '../data/original/shanghaitech/true_crowd_counting/'
-    print(os.path.isdir(out_path))
-
+    # out_path = '../data/original/shanghaitech/true_crowd_counting/'
+    out_path = 'data/original/shanghaitech/test_crowd_counting/'
+    # print(os.path.isdir(out_path))
+    
     if os.path.isdir(out_path) is False:
         os.mkdir(out_path)
 
@@ -107,11 +111,13 @@ if __name__ == '__main__':
         p_w = math.floor(float(img.shape[1]) / 3.0)
         d_map_ph = math.floor(math.floor(p_h / 2.0) / 2.0)
         d_map_pw = math.floor(math.floor(p_w / 2.0) / 2.0)
-
+        '''
         if (global_step < validation_num):
             mode = 'val'
         else:
             mode = 'train'
+        '''
+        mode = 'test'
         py = 1
         py2 = 1
         for j in range(1, 4):
@@ -130,9 +136,12 @@ if __name__ == '__main__':
                 px2 = px2 + d_map_pw
                 if final_image.shape[2] < 3:
                     final_image = np.tile(final_image, [1, 1, 3])
-                image_final_name = out_path + mode + '_img/' 'IMG_' + str(i) + '_' + str(count) + '.jpg'
+                #image_final_name = out_path + mode + '_img/' + 'IMG_' + str(i) + '_' + str(count) + '.jpg'
+                image_final_name = out_path + mode + '_img/' + 'IMG_' + str(i) + '.jpg'
                 # gt_final_name = out_path + mode + '_gt/' + 'IMG_' + str(i) + '_' + str(count) + '.csv'
-                gt_final_name = out_path + mode + '_gt/' + 'IMG_' + str(i) + '_' + str(count) + '.npy'
+                # gt_final_name = out_path + mode + '_gt/' + 'IMG_' + str(i) + '_' + str(count) + '.npy'
+                gt_final_name = out_path + mode + '_gt/' + 'IMG_' + str(i) + '.npy'
+                
                 print('i = {}, count = {}'.format(i, count))
                 print('gt_final name = {}'.format(gt_final_name))
                 print('image final name = {}'.format(image_final_name))
