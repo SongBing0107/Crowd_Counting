@@ -10,4 +10,4 @@ from src import utils
 saveoutput = True
 
 net = CrowdCounter()
-
+trained_model 
