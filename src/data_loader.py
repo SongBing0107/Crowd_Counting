@@ -103,8 +103,11 @@ class ImageDataLoader():
                 wd_1 = (wd/4)*4
                 img = cv2.resize(img,(wd_1,ht_1))
                 img = img.reshape((1,1,img.shape[0],img.shape[1]))
-                den = pd.read_csv(os.path.join(self.gt_path,os.path.splitext(fname)[0] + '.csv'), sep=',',header=None).as_matrix()                        
-                den  = den.astype(np.float32, copy=False)
+                #den = pd.read_csv(os.path.join(self.gt_path,os.path.splitext(fname)[0] + '.csv'), sep=',',header=None).as_matrix()                        
+                #den  = den.astype(np.float32, copy=False)
+                den = np.load(os.path.join(self.gt_path, os.path.splitext(fname)[0] + '.npy'))
+                den = pd.DataFrame(data)
+                den - den.values
                 if self.gt_downsample:
                     wd_1 = wd_1/4
                     ht_1 = ht_1/4

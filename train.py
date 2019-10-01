@@ -2,6 +2,7 @@ import os
 import torch
 import numpy as np
 import sys
+import matplotlib.pyplot as plt
 
 from src.crowd_count import CrowdCounter
 from src import network
@@ -12,7 +13,7 @@ from src.evaluate_model import evaluate_model
 
 method = 'mcnn'
 dataset_name = 'shtechA'
-output_dir = './result/'
+output_dir = './result_0930/'
 
 if not os.path.isdir(output_dir):
     os.mkdir(output_dir)
@@ -47,14 +48,14 @@ def log_print(text, color=None, on_color=None, attrs=None):
         cprint(text, color=color, on_color=on_color, attrs=attrs)
     else:
         print(text)
-
+'''
 
 # Tensorboard  config
 use_tensorboard = False
 save_exp_name = method + '_' + dataset_name + '_' + 'v1'
 remove_all_log = False  # remove all historical experiments in TensorBoard
 exp_name = None  # the previous experiment name in TensorBoard
-'''
+
 # ------------
 rand_seed = 64678
 if rand_seed is not None:
@@ -96,6 +97,12 @@ t.tic()
 data_loader = ImageDataLoader(train_path, train_gt_path, shuffle=True, gt_downsample=True, pre_load=True)
 data_loader_val = ImageDataLoader(val_path, val_gt_path, shuffle=False, gt_downsample=True, pre_load=True)
 best_mae = sys.maxsize
+loss_record = []
+mae_record = []
+mse_record = []
+
+losscount = 0
+mcount = 0
 
 for epoch in range(start_step, end_step + 1):
     step = -1
@@ -112,6 +119,7 @@ for epoch in range(start_step, end_step + 1):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+        
 
         if step % disp_interval == 0:
             duration = t.toc(average=False)
@@ -130,8 +138,10 @@ for epoch in range(start_step, end_step + 1):
         if re_cnt:
             t.tic()
             re_cnt = False
-
-    if (epoch % 2 == 0):
+    losscount += 1
+    loss_record.append(train_loss)
+    
+    if (epoch % 10 == 0):
         save_name = os.path.join(output_dir, '{}_{}_{}.h5'.format(method, dataset_name, epoch))
         network.save_net(save_name, net)
         # calculate error on the validation dataset
@@ -140,13 +150,18 @@ for epoch in range(start_step, end_step + 1):
             best_mae = mae
             best_mse = mse
             best_model = '{}_{}_{}.h5'.format(method, dataset_name, epoch)
-        '''
-        log_text = 'EPOCH: %d, MAE: %.1f, MSE: %0.1f' % (epoch, mae, mse)
-        log_print(log_text, color='green', attrs=['bold'])
-        log_text = 'BEST MAE: %0.1f, BEST MSE: %0.1f, BEST MODEL: %s' % (best_mae, best_mse, best_model)
-        log_print(log_text, color='green', attrs=['bold'])
-        if use_tensorboard:
-            exp.add_scalar_value('MAE', mae, step=epoch)
-            exp.add_scalar_value('MSE', mse, step=epoch)
-            exp.add_scalar_value('train_loss', train_loss / data_loader.get_num_samples(), step=epoch)
-        '''
+        mcount = mcount + 1 
+        mae_record.append(mae)
+        mse_record.append(mse)
+        print('Epoch: {}, MAE: {}, MSE: {}'.format(epoch, mae, mse))
+        
+plt.plot(range(losscount), loss_record)
+plt.title('loss record')
+plt.savefig('loss_record.png')
+
+plt.plot(range(mcount), mae_record, color='red', label='mae')
+plt.plot(range(mcount), mse_record, color='blue', label='mse')
+plt.title('Mae & Mse')
+plt.savefig('Mae & Mse record')
+
+

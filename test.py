@@ -15,8 +15,8 @@ torch.backends.cudnn.benchmark = False
 vis = False 
 output = True
 
-data_path = 'data/original/shanghaitech/part_A/test_data/images'
-gt_path = 'data/original/shanghaitech/part_A/test_data/ground-truth'
+data_path = 'data/original/shanghaitech/test_crowd_counting/test_img'
+gt_path = 'data/original/shanghaitech/test_crowd_counting/test_gt'
 model_path = 'result/mcnn_shtechA_2000.h5'
 model_name = os.path.basename(model_path).split('.')[0]
 
@@ -44,19 +44,21 @@ mae, mse = 0, 0
 
 dataloader = ImageDataLoader(data_path, gt_path, shuffle=False, gt_downsample=True, pre_load=True)
 
-for blob in dataloader:
+for idx, blob in enumerate(dataloader):
     im = blob['data']
     gt = blob['gt_density']
 
     density_map = net(im, gt)
-    density_map = density_map.cpu().numpy()
-
+    #print('type of the density map is {}'.format(type(density_map)))
+    density_map = density_map.cpu().detach().numpy()
+    #density_map = density_map.cpu().numpy()
+    
     gt_count = np.sum(gt)
     et_count = np.sum(density_map)
     
     mae = mae + abs(gt_count - et_count)
     mse = mse + (gt_count - et_count) * (gt_count - et_count)
-
+    print('epoch {}: mae = {}, mse = {}'.format(idx, mae, mse))
     if output:
         utils.save_density_map(density_map, outpath, 'output_' + blob['fname'].split('.')[0] + '.png')
 
