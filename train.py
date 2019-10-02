@@ -13,7 +13,7 @@ from src.evaluate_model import evaluate_model
 
 method = 'mcnn'
 dataset_name = 'shtechA'
-output_dir = './result_0930/'
+output_dir = './result_1001_3/'
 
 if not os.path.isdir(output_dir):
     os.mkdir(output_dir)
@@ -26,12 +26,12 @@ val_gt_path = r'data/original/shanghaitech/true_crowd_counting/val_gt'
 
 #training configuration
 start_step = 0
-end_step = 2000
-lr = 0.00001
+end_step = 600
+lr = 0.00007
 momentum = 0.9
 disp_interval = 500
 log_interval = 250
-'''
+
 try:
     from termcolor import cprint
 except ImportError:
@@ -48,7 +48,7 @@ def log_print(text, color=None, on_color=None, attrs=None):
         cprint(text, color=color, on_color=on_color, attrs=attrs)
     else:
         print(text)
-'''
+
 
 # Tensorboard  config
 use_tensorboard = False
@@ -74,7 +74,7 @@ optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, net.parameters())
 
 if not os.path.exists(output_dir):
     os.mkdir(output_dir)
-'''
+
 # tensorboad
 use_tensorboard = use_tensorboard and CrayonClient is not None
 if use_tensorboard:
@@ -86,7 +86,7 @@ if use_tensorboard:
         exp = cc.create_experiment(exp_name)
     else:
         exp = cc.open_experiment(exp_name)
-'''
+
 # training
 train_loss = 0
 step_cnt = 0
@@ -141,7 +141,7 @@ for epoch in range(start_step, end_step + 1):
     losscount += 1
     loss_record.append(train_loss)
     
-    if (epoch % 10 == 0):
+    if (epoch % 3 == 0):
         save_name = os.path.join(output_dir, '{}_{}_{}.h5'.format(method, dataset_name, epoch))
         network.save_net(save_name, net)
         # calculate error on the validation dataset
@@ -155,13 +155,27 @@ for epoch in range(start_step, end_step + 1):
         mse_record.append(mse)
         print('Epoch: {}, MAE: {}, MSE: {}'.format(epoch, mae, mse))
         
-plt.plot(range(losscount), loss_record)
-plt.title('loss record')
-plt.savefig('loss_record.png')
+    log_text = 'EPOCH: %d, MAE: %.1f, MSE: %0.1f' % (epoch,mae,mse)
+    log_print(log_text, color='green', attrs=['bold'])
+    log_text = 'BEST MAE: %0.1f, BEST MSE: %0.1f, BEST MODEL: %s' % (best_mae,best_mse, best_model)
+    log_print(log_text, color='green', attrs=['bold'])
+    if use_tensorboard:
+        exp.add_scalar_value('MAE', mae, step=epoch)
+        exp.add_scalar_value('MSE', mse, step=epoch)
+        exp.add_scalar_value('train_loss', train_loss/data_loader.get_num_samples(), step=epoch)
+        
+plt.plot(range(losscount), loss_record, color='green', label='loss')
+plt.title('loss')
+plt.legend()
+plt.savefig('loss_1001_2.jpg')
+plt.close()
 
 plt.plot(range(mcount), mae_record, color='red', label='mae')
 plt.plot(range(mcount), mse_record, color='blue', label='mse')
+
 plt.title('Mae & Mse')
-plt.savefig('Mae & Mse record')
+plt.legend()
+plt.savefig('Mase_1001_2.jpg')
+plt.close()
 
 
