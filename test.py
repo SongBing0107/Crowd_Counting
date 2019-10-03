@@ -30,12 +30,12 @@ gt_path = 'data/original/shanghaitech/test_crowd_counting/test_gt'
 #model_path = 'result_0930/mcnn_shtechA_2000.h5'
 #model_path = r'mcnn_shtechB_110.h5' # example model
 model_path = r'result_1001/mcnn_shtechA_348.h5' # result_1001 best model
-#model_path = r'result_1001_2/mcnn_shtechA_555.h5' # result_1001_2 best model
 
 model_name = os.path.basename(model_path).split('.')[0]
 
 outpath = './output/'  
 result_report = os.path.join(outpath, 'density_map_report_' + model_name)
+file_results = os.path.join(result_report,'results_' + model_name + '_.txt')
 
 if not os.path.isdir(outpath):
     os.mkdir(outpath)
@@ -80,7 +80,8 @@ mae = mae / dataloader.get_num_samples()
 mse = np.sqrt(mse / dataloader.get_num_samples())
 print('mae = {}, mse = {}'.format(mae, mse))
 
-
+f = open(file_results, 'w')
+f.write(model_name + ' ' + 'Mae:{}, Mse:{}'.format(mae, mse))
 
 
 
