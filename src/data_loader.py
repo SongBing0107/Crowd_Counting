@@ -67,11 +67,11 @@ class ImageDataLoader():
                     
                 den = den.reshape((1, 1, den.shape[0], den.shape[1]))
                 blob = {}
-                blob['data']=img
-                blob['gt_density']=den
+                blob['data'] = img
+                blob['gt_density'] = den
                 blob['fname'] = fname
                 self.blob_list[idx] = blob
-                idx = idx+1
+                idx = idx + 1
                 if idx % 100 == 0:                    
                     print('Loaded ', idx, '/', self.num_samples, 'files')
                
