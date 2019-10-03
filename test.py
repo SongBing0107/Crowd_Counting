@@ -38,6 +38,18 @@ result_report = os.path.join(outpath, 'density_map_report_' + model_name)
 file_results = os.path.join(result_report,'results_' + model_name + '_.txt')
 
 if not os.path.isdir(outpath):
+import os 
+import torch
+import numpy as np
+import h5py
+
+from src.crowd_count import CrowdCounter
+from src import network
+from src.data_loader import ImageDataLoader
+from src.timer import Timer
+from src import utils
+from src.evaluate_model import evaluate_model
+
     os.mkdir(outpath)
 if not os.path.isdir(result_report):
     os.mkdir(result_report)
