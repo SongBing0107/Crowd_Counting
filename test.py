@@ -23,14 +23,16 @@ val_gt_path = r'data/original/shanghaitech/true_crowd_counting/val_gt'
 
 #data_path = 'data/original/shanghaitech/true_crowd_counting/train_img'
 #gt_path = 'data/original/shanghaitech/true_crowd_counting/train_gt'
-
 data_path = 'data/original/shanghaitech/test_crowd_counting/test_img'
 gt_path = 'data/original/shanghaitech/test_crowd_counting/test_gt'
+#data_path = r'data_preparation/test_img'
+#gt_path = r'data_preparation/test_gt'
+
+
 #model_path = 'result/mcnn_shtechA_2000.h5'
 #model_path = 'result_0930/mcnn_shtechA_2000.h5'
 #model_path = r'mcnn_shtechB_110.h5' # example model
 model_path = r'result_1001/mcnn_shtechA_348.h5' # result_1001 best model
-
 model_name = os.path.basename(model_path).split('.')[0]
 
 outpath = './output/'  
@@ -38,18 +40,6 @@ result_report = os.path.join(outpath, 'density_map_report_' + model_name)
 file_results = os.path.join(result_report,'results_' + model_name + '_.txt')
 
 if not os.path.isdir(outpath):
-import os 
-import torch
-import numpy as np
-import h5py
-
-from src.crowd_count import CrowdCounter
-from src import network
-from src.data_loader import ImageDataLoader
-from src.timer import Timer
-from src import utils
-from src.evaluate_model import evaluate_model
-
     os.mkdir(outpath)
 if not os.path.isdir(result_report):
     os.mkdir(result_report)
@@ -77,7 +67,7 @@ for idx, blob in enumerate(dataloader):
     density_map = net(im, gt)
     #print('type of the density map is {}'.format(type(density_map)))
     density_map = density_map.cpu().detach().numpy()
-    #density_map = density_map.cpu().numpy()
+
     
     gt_count = np.sum(gt)
     et_count = np.sum(density_map)
@@ -88,8 +78,10 @@ for idx, blob in enumerate(dataloader):
     if output:
         utils.save_density_map(density_map, outpath, 'output_' + blob['fname'].split('.')[0] + '.png')
 
+print('after change, mae = {}, mse = {}, num_sample = {}'.format(mae, mse, dataloader.get_num_samples()))
 mae = mae / dataloader.get_num_samples()
 mse = np.sqrt(mse / dataloader.get_num_samples())
+
 print('mae = {}, mse = {}'.format(mae, mse))
 
 f = open(file_results, 'w')

@@ -47,7 +47,7 @@ class ImageDataLoader():
                 # data = np.load()
                 # print('path {}'.format(os.path.join(self.gt_path, os.path.splitext(fname)[0] + '.csv')))
                 # print(os.path.isfile(os.path.join(self.gt_path, os.path.splitext(fname)[0] + '.npy')))
-
+                print('path = {}'.format(os.path.join(self.gt_path, os.path.splitext(fname)[0])))
                 data = np.load(os.path.join(self.gt_path, os.path.splitext(fname)[0] + '.npy'))
                 den = pd.DataFrame(data)
                 den = den.values

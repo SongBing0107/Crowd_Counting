@@ -102,8 +102,8 @@ if __name__ == '__main__':
             #gt_final_name = output_path + '{}_{}.npy'.format(i, j)
             
             image_final_name = output_path + '{}.jpg'.format(count)
-            gt_final_name = output_path + '{}.npy'.format(count)
-            
+            gt_final_name = output_path + '{}'.format(count)
+            print('gt final name is {}'.format(gt_final_name))
             Image.fromarray(final_image).convert('RGB').save(image_final_name)
             np.save(gt_final_name, final_gt)
             count = count + 1
@@ -113,10 +113,8 @@ if __name__ == '__main__':
         py1 = py1 + ph
         py2 = py2 + d_map_ph
     
-
-
-plt.imshow(density_map)
-plt.show()
+#plt.imshow(density_map)
+#plt.show()
 
 
 
