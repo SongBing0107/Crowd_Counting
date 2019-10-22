@@ -67,11 +67,13 @@ for idx, blob in enumerate(dataloader):
     density_map = net(im, gt)
     #print('type of the density map is {}'.format(type(density_map)))
     density_map = density_map.cpu().detach().numpy()
-
+    print('density map is {}'.format(density_map))
     
     gt_count = np.sum(gt)
     et_count = np.sum(density_map)
-    
+    if idx == 5:
+        break
+        
     mae = mae + abs(gt_count - et_count)
     mse = mse + (gt_count - et_count) * (gt_count - et_count)
     print('epoch {}: mae = {}, mse = {}'.format(idx, mae, mse))

@@ -26,29 +26,28 @@ model_name = os.path.basename(model_path).split('.')[0]
 img_name = r''
 gt_name = r''
 
+if os.path.isdir(img_name):
+    image = 
+
 analysis_report = os.path.join(outpath, 'Analysis_' + img_name + '.txt')
 print('output analysis report path is {}'.format(analysis_report))
 
 net = CrowdCounter()
-trained_model = os.path.join(modek_path)
+trained_model = os.path.join(model_path)
 
 # read model's parameter 
-h5f = h5.py.File(trained_model, mode='r')
+h5f = h5py.File(trained_model, mode='r')
 
 for k, v in net.state_dict().items():
     param = torch.from_numpy(np.asarray(h5f[k]))
     v.copy_(param)
+
 net.cuda()
 net.eval()
 
+mae, mse = 0, 0
 
-
-
-
-
-
-
-
+print(net)
 
 
 

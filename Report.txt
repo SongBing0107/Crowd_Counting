@@ -1,0 +1,16 @@
+A, B兩部分, A密集, B稀疏
+
+A trainset = 300, testset = 182
+B trainset = 400, testset = 316
+
+一張彩色的image是由三張灰階影像所組成
+
+
+HSI or HSL 其中的il 是灰階影像
+
+RGB => screen
+CMY => 印刷
+HSI => human , I = gray
+YIQ => TV, Y = gray
+YCbCr => use for computer, Y = gray
+

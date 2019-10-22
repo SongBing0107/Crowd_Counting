@@ -25,3 +25,8 @@ class CrowdCounter(nn.Module):
     def build_loss(self, density_map, gt_data):
         loss = self.loss_fn(density_map, gt_data)
         return loss
+
+    def test_single_image(self, image):
+        density_map = self.DME(image)
+        return density_map
+
